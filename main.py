@@ -15,3 +15,13 @@ print("Список пользователей: \n")
 
 for user_id, username, name, email in users:
     print(f"ID: {user_id}, Name: {name}, Username: {username}, Email: {email}\n")
+
+db.update_user(1, "iammark", "Mark", "bybinmark@yandex.ru")
+db.delete_user(2)
+
+# Получение всех пользователей
+users = db.get_all_users()
+print("UPD: Список пользователей: \n")
+
+for user_id, username, name, email in users:
+    print(f"ID: {user_id}, Name: {name}, Username: {username}, Email: {email}\n")

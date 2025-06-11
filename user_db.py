@@ -38,8 +38,34 @@ class UserDataBase:
             except sqlite3.IntegrityError:
                 print(f"Error: User with username '{username}' or email '{email}' already exists.")
 
+    # Получение всех пользователей
     def get_all_users(self) -> List[Tuple[int, str, str, str]]:
         with self._connect() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT id, username, name, email FROM users")
             return cursor.fetchall()
+        
+    # Обновление пользователя
+    def update_user(self, user_id: int, username: str, name: str, email: str) -> None:
+        with self._connect() as conn:
+            cursor = conn.cursor()
+            try:
+                cursor.execute(
+                "UPDATE users SET username = ?, name = ?, email = ? WHERE id = ?",
+                (username, name, email, user_id)
+            )
+                conn.commit()
+                print(f"Success: User with ID '{user_id}' updated successfully. New details - Username: {username}, Name: {name}, Email: {email}.")
+            except sqlite3.Error as e:
+                print(f"Error: Could not update user with ID '{user_id}'. Error: {e}")
+    
+    # Удаление пользователя
+    def delete_user(self, user_id: int) -> None:
+        with self._connect() as conn:
+            cursor = conn.cursor()
+            try:
+                cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+                conn.commit()
+                print(f"Success: User with ID '{user_id}' deleted successfully.")
+            except sqlite3.Error as e:
+                print(f"Error: Could not delete user with ID '{user_id}'. Error: {e}")
