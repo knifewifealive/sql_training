@@ -69,3 +69,28 @@ class UserDataBase:
                 print(f"Success: User with ID '{user_id}' deleted successfully.")
             except sqlite3.Error as e:
                 print(f"Error: Could not delete user with ID '{user_id}'. Error: {e}")
+
+    # Поиск пользователя по имени
+    def find_user_by_name(self, name: str) -> List[Tuple[int, str, str, str]]:
+        with self._connect() as conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute("SELECT id, username, name, email FROM users WHERE name = ?", (name,))
+                return cursor.fetchall()
+            except sqlite3.Error as e:
+                print(f"Error: Could not find user with name '{name}'. Error: {e}")
+                return []
+
+    # Поиск пользователя по имени и email
+    def find_user_by_name_and_email(self, name: str, email: str) -> List[Tuple[int, str, str, str]]:
+        with self._connect() as conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "SELECT id, username, name, email FROM users WHERE name = ? AND email = ?",
+                    (name, email)
+                )
+                return cursor.fetchall()
+            except sqlite3.Error as e:
+                print(f"Error: Could not find user with name '{name}' and email '{email}'. Error: {e}")
+                return []
